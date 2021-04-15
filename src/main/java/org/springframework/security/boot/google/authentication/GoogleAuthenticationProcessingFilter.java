@@ -142,4 +142,28 @@ public class GoogleAuthenticationProcessingFilter extends AuthenticationProcessi
 		this.authorizationParamName = authorizationParamName;
 	}
 
+	public HttpTransport getTransport() {
+		return transport;
+	}
+
+	public void setTransport(HttpTransport transport) {
+		this.transport = transport;
+	}
+
+	public JsonFactory getJsonFactory() {
+		return jsonFactory;
+	}
+
+	public void setJsonFactory(JsonFactory jsonFactory) {
+		this.jsonFactory = jsonFactory;
+	}
+
+	public String getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
+
 }
