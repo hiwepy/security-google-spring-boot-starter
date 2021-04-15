@@ -105,6 +105,10 @@ public class GoogleAuthenticationProcessingFilter extends AuthenticationProcessi
 			}
 			
 			GoogleAuthenticationToken authRequest = new GoogleAuthenticationToken(idToken, idTokenString);
+			authRequest.setAppId(this.obtainAppId(request));
+			authRequest.setAppChannel(this.obtainAppChannel(request));
+			authRequest.setAppVersion(this.obtainAppVersion(request));
+			authRequest.setUid(this.obtainUid(request));
 			authRequest.setLongitude(this.obtainLongitude(request));
 			authRequest.setLatitude(this.obtainLatitude(request));
 			authRequest.setSign(this.obtainSign(request));

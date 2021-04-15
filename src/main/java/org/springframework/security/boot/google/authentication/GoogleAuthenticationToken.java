@@ -23,30 +23,16 @@ import org.springframework.security.core.GrantedAuthority;
 @SuppressWarnings("serial")
 public class GoogleAuthenticationToken extends AbstractAuthenticationToken {
 
-	private final Object principal;
 	private String accessToken;
     
     public GoogleAuthenticationToken( Object principal, String accessToken) {
-        super(null);
-        this.principal = principal;
+        super(principal);
         this.accessToken = accessToken;
-        this.setAuthenticated(false);
     }
 
     public GoogleAuthenticationToken( Object principal, String accessToken, Collection<? extends GrantedAuthority> authorities) {
-        super(authorities);
-        this.eraseCredentials();
-        this.principal = principal;
+        super(principal, null, authorities);
         this.accessToken = accessToken;
-        super.setAuthenticated(true);
-    }
-
-    @Override
-    public void setAuthenticated(boolean authenticated) {
-        if (authenticated) {
-            throw new IllegalArgumentException("Cannot set this token to trusted - use constructor which takes a GrantedAuthority list instead");
-        }
-        super.setAuthenticated(false);
     }
 
     @Override
@@ -54,11 +40,6 @@ public class GoogleAuthenticationToken extends AbstractAuthenticationToken {
         return accessToken;
     }
 
-    @Override
-    public Object getPrincipal() {
-        return this.principal;
-    }
-    
     @Override
     public void eraseCredentials() {        
         super.eraseCredentials();
