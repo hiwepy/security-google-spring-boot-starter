@@ -29,8 +29,10 @@ import org.springframework.security.boot.biz.authentication.nested.MatchedAuthen
 import org.springframework.security.boot.biz.exception.AuthResponse;
 import org.springframework.security.boot.biz.exception.AuthResponseCode;
 import org.springframework.security.boot.google.SpringSecurityGoogleMessageSource;
-import org.springframework.security.boot.google.exception.GoogleAcceccTokenNotFoundException;
-import org.springframework.security.boot.google.exception.GoogleIdTokenVerifierException;
+import org.springframework.security.boot.google.exception.GoogleAccessTokenExpiredException;
+import org.springframework.security.boot.google.exception.GoogleAccessTokenIncorrectException;
+import org.springframework.security.boot.google.exception.GoogleAccessTokenInvalidException;
+import org.springframework.security.boot.google.exception.GoogleAccessTokenNotFoundException;
 import org.springframework.security.boot.utils.SubjectUtils;
 import org.springframework.security.core.AuthenticationException;
 
@@ -42,8 +44,9 @@ public class GoogleMatchedAuthenticationEntryPoint implements MatchedAuthenticat
 	
 	@Override
 	public boolean supports(AuthenticationException e) {
-		return SubjectUtils.isAssignableFrom(e.getClass(), GoogleAcceccTokenNotFoundException.class, 
-				GoogleIdTokenVerifierException.class);
+		return SubjectUtils.isAssignableFrom(e.getClass(), GoogleAccessTokenExpiredException.class, 
+				GoogleAccessTokenIncorrectException.class, GoogleAccessTokenInvalidException.class,
+				GoogleAccessTokenNotFoundException.class );
 	}
 
 	@Override
@@ -54,12 +57,18 @@ public class GoogleMatchedAuthenticationEntryPoint implements MatchedAuthenticat
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 		
-		if (e instanceof GoogleAcceccTokenNotFoundException) {
-			JSONObject.writeJSONString(response.getWriter(), AuthResponse.of(AuthResponseCode.SC_AUTHZ_CODE_REQUIRED.getCode(), 
-					messages.getMessage(AuthResponseCode.SC_AUTHZ_CODE_REQUIRED.getMsgKey(), e.getMessage())));
-		} else if (e instanceof GoogleIdTokenVerifierException) {
+		if (e instanceof GoogleAccessTokenExpiredException) {
+			JSONObject.writeJSONString(response.getWriter(), AuthResponse.of(AuthResponseCode.SC_AUTHZ_CODE_EXPIRED.getCode(), 
+					messages.getMessage(AuthResponseCode.SC_AUTHZ_CODE_EXPIRED.getMsgKey(), e.getMessage())));
+		} else if (e instanceof GoogleAccessTokenIncorrectException) {
+			JSONObject.writeJSONString(response.getWriter(), AuthResponse.of(AuthResponseCode.SC_AUTHZ_CODE_INCORRECT.getCode(), 
+					messages.getMessage(AuthResponseCode.SC_AUTHZ_CODE_INCORRECT.getMsgKey(), e.getMessage())));
+		} else if (e instanceof GoogleAccessTokenInvalidException) {
 			JSONObject.writeJSONString(response.getWriter(), AuthResponse.of(AuthResponseCode.SC_AUTHZ_CODE_INVALID.getCode(), 
 					messages.getMessage(AuthResponseCode.SC_AUTHZ_CODE_INVALID.getMsgKey(), e.getMessage())));
+		} else if (e instanceof GoogleAccessTokenNotFoundException) {
+			JSONObject.writeJSONString(response.getWriter(), AuthResponse.of(AuthResponseCode.SC_AUTHZ_CODE_REQUIRED.getCode(), 
+					messages.getMessage(AuthResponseCode.SC_AUTHZ_CODE_REQUIRED.getMsgKey(), e.getMessage())));
 		}
 	}
 	

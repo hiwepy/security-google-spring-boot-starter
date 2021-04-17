@@ -15,33 +15,36 @@
  */
 package org.springframework.security.boot.google.exception;
 
+
 import org.springframework.security.core.AuthenticationException;
 
+/**
+ *
+ */
 @SuppressWarnings("serial")
-public class GoogleIdTokenVerifierException extends AuthenticationException {
+public class GoogleAccessTokenNotFoundException extends AuthenticationException {
 	
 	// ~ Constructors
 	// ===================================================================================================
 
 	/**
-	 * Constructs an <code>GoogleIdTokenVerifierException</code> with the
+	 * Constructs an <code>GoogleAccessTokenNotFoundException</code> with the
 	 * specified message.
 	 *
 	 * @param msg the detail message
 	 */
-	public GoogleIdTokenVerifierException(String msg) {
+	public GoogleAccessTokenNotFoundException(String msg) {
 		super(msg);
 	}
 
 	/**
-	 * Constructs an <code>GoogleIdTokenVerifierException</code> with the
+	 * Constructs an <code>GoogleAccessTokenNotFoundException</code> with the
 	 * specified message and root cause.
 	 *
 	 * @param msg the detail message
 	 * @param t root cause
 	 */
-	public GoogleIdTokenVerifierException(String msg, Throwable t) {
+	public GoogleAccessTokenNotFoundException(String msg, Throwable t) {
 		super(msg, t);
 	}
-
 }

@@ -15,36 +15,37 @@
  */
 package org.springframework.security.boot.google.exception;
 
-
-import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.boot.biz.exception.AuthenticationTokenInvalidException;
 
 /**
- *
+ * Google AccessToken Invalid Exception
+ * @author 		： <a href="https://github.com/hiwepy">wandl</a>
  */
 @SuppressWarnings("serial")
-public class GoogleAcceccTokenNotFoundException extends AuthenticationException {
+public class GoogleAccessTokenInvalidException extends AuthenticationTokenInvalidException {
 	
 	// ~ Constructors
 	// ===================================================================================================
 
 	/**
-	 * Constructs an <code>GoogleAcceccTokenNotFoundException</code> with the
+	 * Constructs an <code>GoogleAccessTokenInvalidException</code> with the
 	 * specified message.
 	 *
 	 * @param msg the detail message
 	 */
-	public GoogleAcceccTokenNotFoundException(String msg) {
+	public GoogleAccessTokenInvalidException(String msg) {
 		super(msg);
 	}
 
 	/**
-	 * Constructs an <code>GoogleAcceccTokenNotFoundException</code> with the
+	 * Constructs an <code>GoogleAccessTokenInvalidException</code> with the
 	 * specified message and root cause.
 	 *
 	 * @param msg the detail message
 	 * @param t root cause
 	 */
-	public GoogleAcceccTokenNotFoundException(String msg, Throwable t) {
+	public GoogleAccessTokenInvalidException(String msg, Throwable t) {
 		super(msg, t);
 	}
+
 }

@@ -27,8 +27,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.boot.biz.authentication.AuthenticationProcessingFilter;
-import org.springframework.security.boot.google.exception.GoogleAcceccTokenNotFoundException;
-import org.springframework.security.boot.google.exception.GoogleIdTokenVerifierException;
+import org.springframework.security.boot.google.exception.GoogleAccessTokenIncorrectException;
+import org.springframework.security.boot.google.exception.GoogleAccessTokenInvalidException;
+import org.springframework.security.boot.google.exception.GoogleAccessTokenNotFoundException;
 import org.springframework.security.boot.utils.WebUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -87,7 +88,7 @@ public class GoogleAuthenticationProcessingFilter extends AuthenticationProcessi
 		idTokenString = idTokenString.trim();
 		
 		if(StringUtils.isBlank(idTokenString)) {
-			throw new GoogleAcceccTokenNotFoundException("accessToken not provided");
+			throw new GoogleAccessTokenNotFoundException("accessToken not provided");
 		}
 		
 		try {
@@ -101,7 +102,7 @@ public class GoogleAuthenticationProcessingFilter extends AuthenticationProcessi
 
 			GoogleIdToken idToken = verifier.verify(idTokenString);
 			if (Objects.isNull(idToken)) {
-				throw new GoogleIdTokenVerifierException(" Google Id Token Invalid ");
+				throw new GoogleAccessTokenInvalidException(" Google Id Token Invalid ");
 			}
 			
 			GoogleAuthenticationToken authRequest = new GoogleAuthenticationToken(idToken, idTokenString);
@@ -119,7 +120,7 @@ public class GoogleAuthenticationProcessingFilter extends AuthenticationProcessi
 			return this.getAuthenticationManager().authenticate(authRequest);
 			
 		} catch (GeneralSecurityException e) {
-			throw new GoogleIdTokenVerifierException(" Google Id Token Verifier Exception : ", e);
+			throw new GoogleAccessTokenIncorrectException(" Google Id Token Verifier Exception : ", e);
 		}
 
     }
