@@ -45,7 +45,7 @@ import com.google.api.client.json.JsonFactory;
 public class SecurityGoogleFilterConfiguration {
 	
 	@Configuration
-	@EnableConfigurationProperties({ SecurityGoogleProperties.class, SecurityBizProperties.class })
+	@EnableConfigurationProperties({ SecurityGoogleProperties.class, SecurityGoogleAuthcProperties.class, SecurityBizProperties.class })
 	@Order(SecurityProperties.DEFAULT_FILTER_ORDER + 4)
 	static class GoogleWebSecurityConfigurerAdapter extends WebSecurityBizConfigurerAdapter {
 
