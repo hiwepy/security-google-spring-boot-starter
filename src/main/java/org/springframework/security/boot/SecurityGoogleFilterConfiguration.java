@@ -34,6 +34,7 @@ import org.springframework.security.web.savedrequest.RequestCache;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.util.Clock;
 
 @Configuration
 @AutoConfigureBefore(name = { 
@@ -61,6 +62,7 @@ public class SecurityGoogleFilterConfiguration {
 		private final LocaleContextFilter localeContextFilter;
 		private final HttpTransport transport;
 		private final JsonFactory jsonFactory;
+		private final Clock clock;
 		
 		public GoogleWebSecurityConfigurerAdapter(
    				
@@ -70,6 +72,7 @@ public class SecurityGoogleFilterConfiguration {
 				ObjectProvider<LocaleContextFilter> localeContextProvider,
 				ObjectProvider<HttpTransport> transportProvider,
 				ObjectProvider<JsonFactory> jsonFactoryProvider,
+				ObjectProvider<Clock> clockProvider,
 				ObjectProvider<AuthenticationProvider> authenticationProvider,
    				ObjectProvider<AuthenticationManager> authenticationManagerProvider,
    				ObjectProvider<AuthenticationListener> authenticationListenerProvider,
@@ -87,6 +90,7 @@ public class SecurityGoogleFilterConfiguration {
 			this.localeContextFilter = localeContextProvider.getIfAvailable();
 			this.transport = transportProvider.getIfAvailable();
 			this.jsonFactory = jsonFactoryProvider.getIfAvailable();
+			this.clock = clockProvider.getIfAvailable(() -> { return Clock.SYSTEM; });
    			List<AuthenticationListener> authenticationListeners = authenticationListenerProvider.stream().collect(Collectors.toList());
    			this.authenticationEntryPoint = super.authenticationEntryPoint(authenticationEntryPointProvider.stream().collect(Collectors.toList()));
    			this.authenticationSuccessHandler = super.authenticationSuccessHandler(authenticationListeners, authenticationSuccessHandlerProvider.stream().collect(Collectors.toList()));
@@ -116,6 +120,8 @@ public class SecurityGoogleFilterConfiguration {
 			map.from(authcProperties.getClientIds()).to(authenticationFilter::setClientIds);
 			map.from(this.transport).to(authenticationFilter::setTransport);
 			map.from(this.jsonFactory).to(authenticationFilter::setJsonFactory);
+			map.from(this.clock).to(authenticationFilter::setClock);
+			map.from(authcProperties.getAcceptableTimeSkewSeconds()).to(authenticationFilter::setAcceptableTimeSkewSeconds);
 			
 			map.from(authcProperties.getPathPattern()).to(authenticationFilter::setFilterProcessesUrl);
 			map.from(rememberMeServices).to(authenticationFilter::setRememberMeServices);

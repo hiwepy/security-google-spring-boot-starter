@@ -36,12 +36,14 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.client.auth.openidconnect.IdTokenVerifier;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.client.util.Clock;
 
 /**
  * Google 登录授权 (authorization)过滤器
@@ -58,7 +60,11 @@ public class GoogleAuthenticationProcessingFilter extends AuthenticationProcessi
 	private JsonFactory jsonFactory = new GsonFactory();
 	private String authorizationParamName = AUTHORIZATION_PARAM;
 	private List<String> clientIds;
-	
+    /** Clock. */
+	private Clock clock = Clock.SYSTEM;
+    /** Seconds of time skew to accept when verifying time. */
+	private long acceptableTimeSkewSeconds = IdTokenVerifier.DEFAULT_TIME_SKEW_SECONDS;
+    
     public GoogleAuthenticationProcessingFilter(ObjectMapper objectMapper) {
     	super(new AntPathRequestMatcher("/login/google"));
     	this.objectMapper = objectMapper;
@@ -95,6 +101,8 @@ public class GoogleAuthenticationProcessingFilter extends AuthenticationProcessi
 		try {
 			
 			GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder( transport, jsonFactory)
+			    .setAcceptableTimeSkewSeconds(acceptableTimeSkewSeconds)
+				.setClock(clock)
 			    // Specify the CLIENT_ID of the app that accesses the backend:
 			    //.setAudience(Collections.singletonList(clientId))
 			    // Or, if multiple clients access the backend:
@@ -166,6 +174,22 @@ public class GoogleAuthenticationProcessingFilter extends AuthenticationProcessi
 
 	public void setClientIds(List<String> clientIds) {
 		this.clientIds = clientIds;
+	}
+
+	public Clock getClock() {
+		return clock;
+	}
+
+	public void setClock(Clock clock) {
+		this.clock = clock;
+	}
+
+	public long getAcceptableTimeSkewSeconds() {
+		return acceptableTimeSkewSeconds;
+	}
+
+	public void setAcceptableTimeSkewSeconds(long acceptableTimeSkewSeconds) {
+		this.acceptableTimeSkewSeconds = acceptableTimeSkewSeconds;
 	}
 
 }

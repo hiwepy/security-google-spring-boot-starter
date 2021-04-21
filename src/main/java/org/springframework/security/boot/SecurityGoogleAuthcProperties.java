@@ -21,6 +21,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.security.boot.biz.property.SecurityAuthcProperties;
 import org.springframework.security.boot.google.authentication.GoogleAuthenticationProcessingFilter;
 
+import com.google.api.client.auth.openidconnect.IdTokenVerifier;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -39,6 +41,9 @@ public class SecurityGoogleAuthcProperties extends SecurityAuthcProperties {
 	/** the token parameter name. Defaults to "token". */
 	private String authorizationParamName = GoogleAuthenticationProcessingFilter.AUTHORIZATION_PARAM;
 
+    /** Seconds of time skew to accept when verifying time. */
+	private long acceptableTimeSkewSeconds = IdTokenVerifier.DEFAULT_TIME_SKEW_SECONDS;
+	
 	private List<String> clientIds;
 	
 }
