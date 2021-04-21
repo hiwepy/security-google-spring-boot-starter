@@ -32,8 +32,7 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 import org.springframework.security.web.savedrequest.RequestCache;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
+import com.google.api.client.googleapis.auth.oauth2.GooglePublicKeysManager;
 import com.google.api.client.util.Clock;
 
 @Configuration
@@ -60,8 +59,7 @@ public class SecurityGoogleFilterConfiguration {
     	private final RememberMeServices rememberMeServices;
 		private final SessionAuthenticationStrategy sessionAuthenticationStrategy;
 		private final LocaleContextFilter localeContextFilter;
-		private final HttpTransport transport;
-		private final JsonFactory jsonFactory;
+		private final GooglePublicKeysManager publicKeysManager;
 		private final Clock clock;
 		
 		public GoogleWebSecurityConfigurerAdapter(
@@ -70,8 +68,7 @@ public class SecurityGoogleFilterConfiguration {
 				SecurityGoogleAuthcProperties authcProperties,
 				
 				ObjectProvider<LocaleContextFilter> localeContextProvider,
-				ObjectProvider<HttpTransport> transportProvider,
-				ObjectProvider<JsonFactory> jsonFactoryProvider,
+				ObjectProvider<GooglePublicKeysManager> publicKeysManagerProvider,
 				ObjectProvider<Clock> clockProvider,
 				ObjectProvider<AuthenticationProvider> authenticationProvider,
    				ObjectProvider<AuthenticationManager> authenticationManagerProvider,
@@ -88,8 +85,7 @@ public class SecurityGoogleFilterConfiguration {
    			
 			this.authcProperties = authcProperties;
 			this.localeContextFilter = localeContextProvider.getIfAvailable();
-			this.transport = transportProvider.getIfAvailable();
-			this.jsonFactory = jsonFactoryProvider.getIfAvailable();
+			this.publicKeysManager = publicKeysManagerProvider.getIfAvailable();
 			this.clock = clockProvider.getIfAvailable(() -> { return Clock.SYSTEM; });
    			List<AuthenticationListener> authenticationListeners = authenticationListenerProvider.stream().collect(Collectors.toList());
    			this.authenticationEntryPoint = super.authenticationEntryPoint(authenticationEntryPointProvider.stream().collect(Collectors.toList()));
@@ -118,8 +114,7 @@ public class SecurityGoogleFilterConfiguration {
 			map.from(authenticationFailureHandler).to(authenticationFilter::setAuthenticationFailureHandler);
 			
 			map.from(authcProperties.getClientIds()).to(authenticationFilter::setClientIds);
-			map.from(this.transport).to(authenticationFilter::setTransport);
-			map.from(this.jsonFactory).to(authenticationFilter::setJsonFactory);
+			map.from(this.publicKeysManager).to(authenticationFilter::setPublicKeysManager);
 			map.from(this.clock).to(authenticationFilter::setClock);
 			map.from(authcProperties.getAcceptableTimeSkewSeconds()).to(authenticationFilter::setAcceptableTimeSkewSeconds);
 			

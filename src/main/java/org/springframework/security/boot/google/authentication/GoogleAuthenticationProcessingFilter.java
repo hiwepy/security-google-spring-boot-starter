@@ -39,10 +39,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.auth.openidconnect.IdTokenVerifier;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.client.googleapis.auth.oauth2.GooglePublicKeysManager;
 import com.google.api.client.util.Clock;
 
 /**
@@ -56,8 +53,7 @@ public class GoogleAuthenticationProcessingFilter extends AuthenticationProcessi
 	 */
 	public static final String AUTHORIZATION_PARAM = "accessToken";
 	private ObjectMapper objectMapper = new ObjectMapper();
-	private HttpTransport transport = new NetHttpTransport();
-	private JsonFactory jsonFactory = new GsonFactory();
+	private GooglePublicKeysManager publicKeysManager;
 	private String authorizationParamName = AUTHORIZATION_PARAM;
 	private List<String> clientIds;
     /** Clock. */
@@ -100,7 +96,7 @@ public class GoogleAuthenticationProcessingFilter extends AuthenticationProcessi
 		
 		try {
 			
-			GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder( transport, jsonFactory)
+			GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(publicKeysManager)
 			    .setAcceptableTimeSkewSeconds(acceptableTimeSkewSeconds)
 				.setClock(clock)
 			    // Specify the CLIENT_ID of the app that accesses the backend:
@@ -152,20 +148,12 @@ public class GoogleAuthenticationProcessingFilter extends AuthenticationProcessi
 		this.authorizationParamName = authorizationParamName;
 	}
 
-	public HttpTransport getTransport() {
-		return transport;
+	public GooglePublicKeysManager getPublicKeysManager() {
+		return publicKeysManager;
 	}
 
-	public void setTransport(HttpTransport transport) {
-		this.transport = transport;
-	}
-
-	public JsonFactory getJsonFactory() {
-		return jsonFactory;
-	}
-
-	public void setJsonFactory(JsonFactory jsonFactory) {
-		this.jsonFactory = jsonFactory;
+	public void setPublicKeysManager(GooglePublicKeysManager publicKeysManager) {
+		this.publicKeysManager = publicKeysManager;
 	}
 
 	public List<String> getClientIds() {
