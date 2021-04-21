@@ -9,8 +9,12 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.boot.biz.userdetails.JwtPayloadRepository;
+import org.springframework.security.boot.biz.userdetails.UserDetailsServiceAdapter;
+import org.springframework.security.boot.google.authentication.GoogleAuthenticationProvider;
 import org.springframework.security.boot.google.authentication.GoogleMatchedAuthenticationEntryPoint;
 import org.springframework.security.boot.google.authentication.GoogleMatchedAuthenticationFailureHandler;
+import org.springframework.security.boot.google.authentication.GoogleMatchedAuthenticationSuccessHandler;
 import org.springframework.util.StringUtils;
 
 import com.google.api.client.googleapis.auth.oauth2.GooglePublicKeysManager;
@@ -68,6 +72,18 @@ public class SecurityGoogleAutoConfiguration {
 	@ConditionalOnMissingBean
 	public GoogleMatchedAuthenticationFailureHandler googleMatchedAuthenticationFailureHandler() {
 		return new GoogleMatchedAuthenticationFailureHandler();
+	}
+	
+	@Bean
+	@ConditionalOnMissingBean
+	public GoogleMatchedAuthenticationSuccessHandler googleMatchedAuthenticationSuccessHandler(JwtPayloadRepository payloadRepository) {
+		return new GoogleMatchedAuthenticationSuccessHandler(payloadRepository);
+	}
+
+	@Bean
+	@ConditionalOnMissingBean
+	public GoogleAuthenticationProvider googleAuthenticationProvider(UserDetailsServiceAdapter userDetailsService) {
+		return new GoogleAuthenticationProvider(userDetailsService);
 	}
 
 }
