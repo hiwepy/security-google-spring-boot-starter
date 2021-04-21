@@ -17,7 +17,7 @@ package org.springframework.security.boot.google.authentication;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import javax.servlet.ServletException;
@@ -45,6 +45,7 @@ import com.google.api.client.json.gson.GsonFactory;
 
 /**
  * Google 登录授权 (authorization)过滤器
+ * https://developers.google.com/identity/sign-in/android/backend-auth?hl=zh-cn
  */
 public class GoogleAuthenticationProcessingFilter extends AuthenticationProcessingFilter {
 
@@ -56,7 +57,7 @@ public class GoogleAuthenticationProcessingFilter extends AuthenticationProcessi
 	private HttpTransport transport = new NetHttpTransport();
 	private JsonFactory jsonFactory = new GsonFactory();
 	private String authorizationParamName = AUTHORIZATION_PARAM;
-	private String clientId;
+	private List<String> clientIds;
 	
     public GoogleAuthenticationProcessingFilter(ObjectMapper objectMapper) {
     	super(new AntPathRequestMatcher("/login/google"));
@@ -95,9 +96,9 @@ public class GoogleAuthenticationProcessingFilter extends AuthenticationProcessi
 			
 			GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder( transport, jsonFactory)
 			    // Specify the CLIENT_ID of the app that accesses the backend:
-			    .setAudience(Collections.singletonList(clientId))
+			    //.setAudience(Collections.singletonList(clientId))
 			    // Or, if multiple clients access the backend:
-			    //.setAudience(Arrays.asList(CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3))
+			    .setAudience(clientIds)
 			    .build();
 
 			GoogleIdToken idToken = verifier.verify(idTokenString);
@@ -159,12 +160,12 @@ public class GoogleAuthenticationProcessingFilter extends AuthenticationProcessi
 		this.jsonFactory = jsonFactory;
 	}
 
-	public String getClientId() {
-		return clientId;
+	public List<String> getClientIds() {
+		return clientIds;
 	}
 
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
+	public void setClientIds(List<String> clientIds) {
+		this.clientIds = clientIds;
 	}
 
 }

@@ -15,6 +15,8 @@
  */
 package org.springframework.security.boot;
 
+import java.util.List;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.security.boot.biz.property.SecurityAuthcProperties;
 import org.springframework.security.boot.google.authentication.GoogleAuthenticationProcessingFilter;
@@ -37,6 +39,6 @@ public class SecurityGoogleAuthcProperties extends SecurityAuthcProperties {
 	/** the token parameter name. Defaults to "token". */
 	private String authorizationParamName = GoogleAuthenticationProcessingFilter.AUTHORIZATION_PARAM;
 
-	private String clientId;
-
+	private List<String> clientIds;
+	
 }

@@ -113,7 +113,7 @@ public class SecurityGoogleFilterConfiguration {
 			map.from(authenticationSuccessHandler).to(authenticationFilter::setAuthenticationSuccessHandler);
 			map.from(authenticationFailureHandler).to(authenticationFilter::setAuthenticationFailureHandler);
 			
-			map.from(authcProperties.getClientId()).to(authenticationFilter::setClientId);
+			map.from(authcProperties.getClientIds()).to(authenticationFilter::setClientIds);
 			map.from(this.transport).to(authenticationFilter::setTransport);
 			map.from(this.jsonFactory).to(authenticationFilter::setJsonFactory);
 			
