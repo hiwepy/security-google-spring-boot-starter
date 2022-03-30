@@ -3,11 +3,13 @@ server:
 
 spring:
   security:
-    openid:
+    google:
       enabled: true
-      claimed-identity-field-name: fff
-      filter-processes-url: 4444
-      return-to-url-parameters:
-        d : d
-      realm-mapping:
-        sdd : xx 
+      authc:
+        acceptable-time-skew-seconds: 300
+        authorization-param-name: accessToken
+        client-ids:
+          - xxxx
+          - yyyyy
+        path-pattern: /login/google
+        post-only: true
