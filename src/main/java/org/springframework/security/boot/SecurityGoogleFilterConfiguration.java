@@ -20,9 +20,7 @@ import org.springframework.security.boot.biz.authentication.AuthenticationListen
 import org.springframework.security.boot.biz.authentication.nested.MatchedAuthenticationEntryPoint;
 import org.springframework.security.boot.biz.authentication.nested.MatchedAuthenticationFailureHandler;
 import org.springframework.security.boot.biz.authentication.nested.MatchedAuthenticationSuccessHandler;
-import org.springframework.security.boot.biz.property.SecuritySessionMgtProperties;
 import org.springframework.security.boot.google.authentication.GoogleAuthenticationProcessingFilter;
-import org.springframework.security.boot.utils.WebSecurityUtils;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -37,14 +35,14 @@ import com.google.api.client.googleapis.auth.oauth2.GooglePublicKeysManager;
 import com.google.api.client.util.Clock;
 
 @Configuration
-@AutoConfigureBefore(name = { 
+@AutoConfigureBefore(name = {
 	"org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration"
 })
 @ConditionalOnWebApplication
 @ConditionalOnProperty(prefix = SecurityGoogleProperties.PREFIX, value = "enabled", havingValue = "true")
 @EnableConfigurationProperties({ SecurityGoogleProperties.class, SecurityGoogleAuthcProperties.class, SecurityBizProperties.class, ServerProperties.class })
 public class SecurityGoogleFilterConfiguration {
-	
+
 	@Configuration
 	@EnableConfigurationProperties({ SecurityGoogleProperties.class, SecurityGoogleAuthcProperties.class, SecurityBizProperties.class })
 	@Order(SecurityProperties.DEFAULT_FILTER_ORDER + 4)
@@ -59,78 +57,78 @@ public class SecurityGoogleFilterConfiguration {
 	    private final ObjectMapper objectMapper;
     	private final RememberMeServices rememberMeServices;
 		private final SessionAuthenticationStrategy sessionAuthenticationStrategy;
-		
+
 		private final GooglePublicKeysManager publicKeysManager;
 		private final Clock clock;
-		
+
 		public GoogleWebSecurityConfigurerAdapter(
-   				
+
 				SecurityBizProperties bizProperties,
 				SecurityGoogleAuthcProperties authcProperties,
-				SecuritySessionMgtProperties sessionMgtProperties,
-				
+
 				ObjectProvider<GooglePublicKeysManager> publicKeysManagerProvider,
 				ObjectProvider<Clock> clockProvider,
-				
+
 				ObjectProvider<LocaleContextFilter> localeContextProvider,
 				ObjectProvider<AuthenticationProvider> authenticationProvider,
    				ObjectProvider<AuthenticationListener> authenticationListenerProvider,
+				ObjectProvider<AuthenticationManager> authenticationManagerProvider,
    				ObjectProvider<MatchedAuthenticationEntryPoint> authenticationEntryPointProvider,
    				ObjectProvider<MatchedAuthenticationSuccessHandler> authenticationSuccessHandlerProvider,
    				ObjectProvider<MatchedAuthenticationFailureHandler> authenticationFailureHandlerProvider,
    				ObjectProvider<ObjectMapper> objectMapperProvider,
    				ObjectProvider<RememberMeServices> rememberMeServicesProvider,
    				ObjectProvider<SessionAuthenticationStrategy> sessionAuthenticationStrategyProvider
-   				
+
 				) {
-			
-			super(bizProperties, sessionMgtProperties, authenticationProvider.stream().collect(Collectors.toList()));
-   			
+
+			super(bizProperties, authcProperties, authenticationProvider.stream().collect(Collectors.toList()), authenticationManagerProvider.getIfAvailable());
+
 			this.authcProperties = authcProperties;
 			this.publicKeysManager = publicKeysManagerProvider.getIfAvailable();
 			this.clock = clockProvider.getIfAvailable(() -> { return Clock.SYSTEM; });
-			
+
 			this.localeContextFilter = localeContextProvider.getIfAvailable();
    			List<AuthenticationListener> authenticationListeners = authenticationListenerProvider.stream().collect(Collectors.toList());
-   			this.authenticationEntryPoint = WebSecurityUtils.authenticationEntryPoint(authcProperties, sessionMgtProperties, authenticationEntryPointProvider.stream().collect(Collectors.toList()));
-   			this.authenticationSuccessHandler = WebSecurityUtils.authenticationSuccessHandler(authcProperties, sessionMgtProperties, authenticationListeners, authenticationSuccessHandlerProvider.stream().collect(Collectors.toList()));
-   			this.authenticationFailureHandler = WebSecurityUtils.authenticationFailureHandler(authcProperties, sessionMgtProperties, authenticationListeners, authenticationFailureHandlerProvider.stream().collect(Collectors.toList()));
-   			this.objectMapper = objectMapperProvider.getIfAvailable();
+			this.authenticationEntryPoint = super.authenticationEntryPoint(authenticationEntryPointProvider.stream().collect(Collectors.toList()));
+			this.authenticationSuccessHandler = super.authenticationSuccessHandler(authenticationListeners, authenticationSuccessHandlerProvider.stream().collect(Collectors.toList()));
+			this.authenticationFailureHandler = super.authenticationFailureHandler(authenticationListeners, authenticationFailureHandlerProvider.stream().collect(Collectors.toList()));
+			this.objectMapper = objectMapperProvider.getIfAvailable();
    			this.rememberMeServices = rememberMeServicesProvider.getIfAvailable();
    			this.sessionAuthenticationStrategy = sessionAuthenticationStrategyProvider.getIfAvailable();
 		}
-		
+
 		public GoogleAuthenticationProcessingFilter authenticationProcessingFilter() throws Exception {
-	    	
+
 			GoogleAuthenticationProcessingFilter authenticationFilter = new GoogleAuthenticationProcessingFilter(this.objectMapper);
-			
+
 			/**
 			 * 批量设置参数
 			 */
 			PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
-			
-			map.from(getSessionMgtProperties().isAllowSessionCreation()).to(authenticationFilter::setAllowSessionCreation);
-			
+
+			map.from(authcProperties.getSessionMgt().isAllowSessionCreation()).to(authenticationFilter::setAllowSessionCreation);
+
 			map.from(authenticationManagerBean()).to(authenticationFilter::setAuthenticationManager);
 			map.from(authenticationSuccessHandler).to(authenticationFilter::setAuthenticationSuccessHandler);
 			map.from(authenticationFailureHandler).to(authenticationFilter::setAuthenticationFailureHandler);
-			
+
 			map.from(authcProperties.getClientIds()).to(authenticationFilter::setClientIds);
 			map.from(this.publicKeysManager).to(authenticationFilter::setPublicKeysManager);
 			map.from(this.clock).to(authenticationFilter::setClock);
 			map.from(authcProperties.getAcceptableTimeSkewSeconds()).to(authenticationFilter::setAcceptableTimeSkewSeconds);
-			
+
 			map.from(authcProperties.getPathPattern()).to(authenticationFilter::setFilterProcessesUrl);
 			map.from(rememberMeServices).to(authenticationFilter::setRememberMeServices);
 			map.from(sessionAuthenticationStrategy).to(authenticationFilter::setSessionAuthenticationStrategy);
 			map.from(authcProperties.isContinueChainBeforeSuccessfulAuthentication()).to(authenticationFilter::setContinueChainBeforeSuccessfulAuthentication);
-			
+
 	        return authenticationFilter;
 	    }
-		
+
 		@Override
 		public void configure(HttpSecurity http) throws Exception {
-			
+
 			http.antMatcher(authcProperties.getPathPattern())
 				.exceptionHandling()
 	        	.authenticationEntryPoint(authenticationEntryPoint)
@@ -138,19 +136,19 @@ public class SecurityGoogleFilterConfiguration {
 	        	.httpBasic()
 	        	.disable()
    	        	.addFilterBefore(localeContextFilter, UsernamePasswordAuthenticationFilter.class)
-   	        	.addFilterBefore(authenticationProcessingFilter(), UsernamePasswordAuthenticationFilter.class); 
-   	    	
+   	        	.addFilterBefore(authenticationProcessingFilter(), UsernamePasswordAuthenticationFilter.class);
+
    	    	super.configure(http, authcProperties.getCors());
    	    	super.configure(http, authcProperties.getCsrf());
    	    	super.configure(http, authcProperties.getHeaders());
 	    	super.configure(http);
 		}
-		
+
 		@Override
 	    public void configure(WebSecurity web) throws Exception {
 	    	super.configure(web);
 	    }
-		
+
 	}
-	
+
 }
