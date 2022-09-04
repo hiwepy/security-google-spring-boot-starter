@@ -18,7 +18,9 @@ package org.springframework.security.boot;
 import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.security.boot.biz.property.SecurityAuthcProperties;
+import org.springframework.security.boot.biz.property.SecurityLogoutProperties;
 import org.springframework.security.boot.google.authentication.GoogleAuthenticationProcessingFilter;
 
 import com.google.api.client.auth.openidconnect.IdTokenVerifier;
@@ -37,13 +39,16 @@ public class SecurityGoogleAuthcProperties extends SecurityAuthcProperties {
 
 	/** Authorization Path Pattern */
 	private String pathPattern = "/**";
-	
+
 	/** the token parameter name. Defaults to "token". */
 	private String authorizationParamName = GoogleAuthenticationProcessingFilter.AUTHORIZATION_PARAM;
 
     /** Seconds of time skew to accept when verifying time. */
 	private long acceptableTimeSkewSeconds = IdTokenVerifier.DEFAULT_TIME_SKEW_SECONDS;
-	
+
 	private List<String> clientIds;
-	
+
+	@NestedConfigurationProperty
+	private SecurityLogoutProperties logout = new SecurityLogoutProperties();
+
 }
