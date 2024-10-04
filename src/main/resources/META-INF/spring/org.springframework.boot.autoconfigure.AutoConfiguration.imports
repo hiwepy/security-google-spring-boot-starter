@@ -1,0 +1,2 @@
+org.springframework.security.boot.SecurityGoogleAutoConfiguration
+org.springframework.security.boot.SecurityGoogleFilterConfiguration

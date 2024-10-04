@@ -1,8 +1,8 @@
 package org.springframework.security.boot;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.client.googleapis.auth.oauth2.GooglePublicKeysManager;
+import com.google.api.client.util.Clock;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.biz.web.servlet.i18n.LocaleContextFilter;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
@@ -12,9 +12,9 @@ import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.boot.biz.authentication.AuthenticationListener;
 import org.springframework.security.boot.biz.authentication.nested.MatchedAuthenticationEntryPoint;
@@ -26,15 +26,15 @@ import org.springframework.security.boot.utils.WebSecurityUtils;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.api.client.googleapis.auth.oauth2.GooglePublicKeysManager;
-import com.google.api.client.util.Clock;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Configuration
 @AutoConfigureBefore(name = { 
@@ -47,8 +47,7 @@ public class SecurityGoogleFilterConfiguration {
 	
 	@Configuration
 	@EnableConfigurationProperties({ SecurityGoogleProperties.class, SecurityGoogleAuthcProperties.class, SecurityBizProperties.class })
-	@Order(SecurityProperties.DEFAULT_FILTER_ORDER + 4)
-	static class GoogleWebSecurityConfigurerAdapter extends WebSecurityBizConfigurerAdapter {
+	static class GoogleWebSecurityCustomizerAdapter extends WebSecurityCustomizerAdapter {
 
 	    private final SecurityGoogleAuthcProperties authcProperties;
 
@@ -63,7 +62,7 @@ public class SecurityGoogleFilterConfiguration {
 		private final GooglePublicKeysManager publicKeysManager;
 		private final Clock clock;
 		
-		public GoogleWebSecurityConfigurerAdapter(
+		public GoogleWebSecurityCustomizerAdapter(
    				
 				SecurityBizProperties bizProperties,
 				SecurityGoogleAuthcProperties authcProperties,
@@ -127,30 +126,32 @@ public class SecurityGoogleFilterConfiguration {
 			
 	        return authenticationFilter;
 	    }
-		
-		@Override
-		public void configure(HttpSecurity http) throws Exception {
-			
-			http.antMatcher(authcProperties.getPathPattern())
-				.exceptionHandling()
-	        	.authenticationEntryPoint(authenticationEntryPoint)
-	        	.and()
-	        	.httpBasic()
-	        	.disable()
-   	        	.addFilterBefore(localeContextFilter, UsernamePasswordAuthenticationFilter.class)
-   	        	.addFilterBefore(authenticationProcessingFilter(), UsernamePasswordAuthenticationFilter.class); 
-   	    	
-   	    	super.configure(http, authcProperties.getCors());
-   	    	super.configure(http, authcProperties.getCsrf());
-   	    	super.configure(http, authcProperties.getHeaders());
-	    	super.configure(http);
+
+		@Bean
+		@Order(SecurityProperties.DEFAULT_FILTER_ORDER + 4)
+		public SecurityFilterChain googleSecurityFilterChain(HttpSecurity http) throws Exception {
+			http = http.antMatcher(authcProperties.getPathPattern())
+					.exceptionHandling()
+					.authenticationEntryPoint(authenticationEntryPoint)
+					.and()
+					.httpBasic()
+					.disable()
+					.addFilterBefore(localeContextFilter, UsernamePasswordAuthenticationFilter.class)
+					.addFilterBefore(authenticationProcessingFilter(), UsernamePasswordAuthenticationFilter.class);
+
+			super.configure(http, authcProperties.getCors());
+			super.configure(http, authcProperties.getCsrf());
+			super.configure(http, authcProperties.getHeaders());
+			super.configure(http);
+
+			return http.build();
 		}
-		
+
 		@Override
-	    public void configure(WebSecurity web) throws Exception {
-	    	super.configure(web);
-	    }
-		
+		public void customize(WebSecurity web) {
+			super.customize(web);
+		}
+
 	}
 	
 }
