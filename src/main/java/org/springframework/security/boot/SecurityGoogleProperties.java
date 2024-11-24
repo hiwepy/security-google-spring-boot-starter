@@ -1,12 +1,10 @@
 package org.springframework.security.boot;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
 import com.google.api.client.googleapis.auth.oauth2.GoogleOAuthConstants;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = SecurityGoogleProperties.PREFIX)
 @Getter

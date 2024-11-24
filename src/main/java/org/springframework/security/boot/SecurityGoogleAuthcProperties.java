@@ -15,17 +15,15 @@
  */
 package org.springframework.security.boot;
 
-import java.util.List;
-
+import com.google.api.client.auth.openidconnect.IdTokenVerifier;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.security.boot.biz.property.SecurityAuthcProperties;
 import org.springframework.security.boot.google.authentication.GoogleAuthenticationProcessingFilter;
 
-import com.google.api.client.auth.openidconnect.IdTokenVerifier;
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import java.util.List;
 
 @ConfigurationProperties(SecurityGoogleAuthcProperties.PREFIX)
 @Getter

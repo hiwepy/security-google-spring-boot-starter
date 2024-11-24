@@ -1,7 +1,11 @@
 package org.springframework.security.boot;
 
-import java.security.GeneralSecurityException;
-
+import com.google.api.client.googleapis.auth.oauth2.GooglePublicKeysManager;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.client.util.Clock;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -17,12 +21,7 @@ import org.springframework.security.boot.google.authentication.GoogleMatchedAuth
 import org.springframework.security.boot.google.authentication.GoogleMatchedAuthenticationSuccessHandler;
 import org.springframework.util.StringUtils;
 
-import com.google.api.client.googleapis.auth.oauth2.GooglePublicKeysManager;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.client.util.Clock;
+import java.security.GeneralSecurityException;
 
 @Configuration
 @AutoConfigureBefore(SecurityBizAutoConfiguration.class)

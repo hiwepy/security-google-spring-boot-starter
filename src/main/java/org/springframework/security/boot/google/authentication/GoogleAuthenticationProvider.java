@@ -1,5 +1,6 @@
 package org.springframework.security.boot.google.authentication;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -11,8 +12,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsChecker;
 import org.springframework.util.Assert;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Google 认证 (authentication) 处理器
