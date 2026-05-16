@@ -10,7 +10,7 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
-	<groupId>com.github.hiwepy</groupId>
+	<groupId>io.github.hiwepy</groupId>
 	<artifactId>security-google-spring-boot-starter</artifactId>
 	<description>Spring Boot Starter For Spring Security With Google AccessToken </description>
 	<version>2.7.x.20241003.RELEASE</version>
@@ -374,7 +374,7 @@
 		<dependencies>
 			<!-- https://github.com/hiwepy/security-biz-spring-boot-starter -->
 			<dependency>
-				<groupId>com.github.hiwepy</groupId>
+				<groupId>io.github.hiwepy</groupId>
 				<artifactId>security-biz-spring-boot-starter</artifactId>
 				<version>${spring-boot-starter-security-biz.version}</version>
 			</dependency>
@@ -464,7 +464,7 @@
 
 		<!-- https://github.com/hiwepy/security-biz-spring-boot-starter -->
 		<dependency>
-			<groupId>com.github.hiwepy</groupId>
+			<groupId>io.github.hiwepy</groupId>
 			<artifactId>security-biz-spring-boot-starter</artifactId>
 		</dependency>
 		<dependency>
