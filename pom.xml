@@ -417,6 +417,9 @@
         <spring-boot-starter-security-biz.version>2.3.x.20260527-SNAPSHOT</spring-boot-starter-security-biz.version>
         <google-api-client.version>2.7.0</google-api-client.version>
         <google-http-client.version>1.45.0</google-http-client.version>
+                <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
+                <okhttp.version>4.12.0</okhttp.version>
+                <slf4j.version>2.0.18</slf4j.version>
     </properties>
 
     <dependencyManagement>
@@ -442,7 +445,29 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-        </dependencies>
+                <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${javax.servlet-api.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${okhttp.version}</version>
+        </dependency>
+</dependencies>
     </dependencyManagement>
 
     <dependencies>
@@ -459,7 +484,7 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <version>4.0.1</version>
+            <version>${javax.servlet-api.version}</version>
             <optional>true</optional>
         </dependency>
 
@@ -467,13 +492,13 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>2.0.13</version>
+            <version>${slf4j.version}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>2.0.13</version>
+            <version>${slf4j.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -532,7 +557,7 @@
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
-            <version>4.12.0</version>
+            <version>${okhttp.version}</version>
         </dependency>
 
     </dependencies>
