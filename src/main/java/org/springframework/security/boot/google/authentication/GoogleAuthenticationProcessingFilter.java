@@ -33,7 +33,7 @@ import org.springframework.security.boot.google.exception.GoogleAccessTokenNotFo
 import org.springframework.security.boot.utils.WebUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -60,7 +60,7 @@ public class GoogleAuthenticationProcessingFilter extends AuthenticationProcessi
 	private long acceptableTimeSkewSeconds = IdTokenVerifier.DEFAULT_TIME_SKEW_SECONDS;
     
     public GoogleAuthenticationProcessingFilter(ObjectMapper objectMapper) {
-    	super(new AntPathRequestMatcher("/login/google"));
+		super(PathPatternRequestMatcher.pathPattern("/login/google"));
     	this.objectMapper = objectMapper;
     }
 
