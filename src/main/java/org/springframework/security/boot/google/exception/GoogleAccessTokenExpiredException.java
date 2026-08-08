@@ -19,7 +19,7 @@ import org.springframework.security.boot.biz.exception.AuthenticationTokenExpire
 
 /**
  * Google AccessToken Expired Exception
- * @author 		： <a href="https://github.com/hiwepy">wandl</a>
+ * @author [@Loong Wan](https://github.com/loong10k)
  */
 @SuppressWarnings("serial")
 public class GoogleAccessTokenExpiredException extends AuthenticationTokenExpiredException {
