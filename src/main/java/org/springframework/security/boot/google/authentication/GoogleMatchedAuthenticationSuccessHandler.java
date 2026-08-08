@@ -1,12 +1,9 @@
 package org.springframework.security.boot.google.authentication;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.alibaba.fastjson2.JSON;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,11 +18,12 @@ import org.springframework.security.boot.biz.userdetails.UserProfilePayload;
 import org.springframework.security.boot.utils.SubjectUtils;
 import org.springframework.security.core.Authentication;
 
-import com.alibaba.fastjson.JSONObject;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Google 认证 (authentication)成功回调器：讲认证信息写回前端
- * @author 		： <a href="https://github.com/hiwepy">hiwepy</a>
+ * @author [@Loong Wan](https://github.com/loong10k)
  */
 public class GoogleMatchedAuthenticationSuccessHandler implements MatchedAuthenticationSuccessHandler {
 
@@ -60,7 +58,7 @@ public class GoogleMatchedAuthenticationSuccessHandler implements MatchedAuthent
 		} else {
 			profilePayload = principal.toPayload();
 		}
-		JSONObject.writeJSONString(response.getOutputStream(), AuthResponse.success(message, profilePayload));
+		JSON.writeTo(response.getOutputStream(), AuthResponse.success(message, profilePayload));
     }
 
 	public JwtPayloadRepository getPayloadRepository() {

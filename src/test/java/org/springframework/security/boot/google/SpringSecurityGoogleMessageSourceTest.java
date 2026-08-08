@@ -15,26 +15,24 @@
  */
 package org.springframework.security.boot.google;
 
-import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.context.support.ResourceBundleMessageSource;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * TODO
+ * Unit tests for {{ @link SpringSecurityGoogleMessageSource }}.
+ *
  * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
-public class SpringSecurityGoogleMessageSource extends ResourceBundleMessageSource {
-	
-	// ~ Constructors
-	// ===================================================================================================
+@DisplayName("SpringSecurityGoogleMessageSource Tests")
+class SpringSecurityGoogleMessageSourceTest {
 
-	public SpringSecurityGoogleMessageSource() {
-		setBasename("org.springframework.security.boot.google.messages");
-	}
-
-	// ~ Methods
-	// ========================================================================================================
-
-	public static MessageSourceAccessor getAccessor() {
-		return new MessageSourceAccessor(new SpringSecurityGoogleMessageSource());
-	}
+    @Test
+    @DisplayName("Instance can be created via constructor")
+    void testInstantiation() {
+        SpringSecurityGoogleMessageSource instance = new SpringSecurityGoogleMessageSource();
+        assertThat(instance).isNotNull();
+    }
 }
