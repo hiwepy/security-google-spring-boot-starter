@@ -1,6 +1,7 @@
 package org.springframework.security.boot.google.authentication;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -22,9 +23,9 @@ import org.springframework.util.Assert;
  * @author [@Loong Wan](https://github.com/loong10k)
  * @since 1.0.0
  */
-@Slf4j
 public class GoogleAuthenticationProvider implements AuthenticationProvider {
-	
+
+	private static final Logger log = LoggerFactory.getLogger(GoogleAuthenticationProvider.class);
 	protected MessageSourceAccessor messages = SpringSecurityGoogleMessageSource.getAccessor();
     private final UserDetailsServiceAdapter userDetailsService;
     private UserDetailsChecker userDetailsChecker = new AccountStatusUserDetailsChecker();

@@ -54,4 +54,11 @@ public class SecurityGoogleAuthcProperties extends SecurityAuthcProperties {
 	/** List of allowed Google OAuth client IDs for ID token audience verification. */
 	private List<String> clientIds;
 
+	public String getAuthorizationParamName() { return authorizationParamName; }
+	public void setAuthorizationParamName(String authorizationParamName) { this.authorizationParamName = authorizationParamName; }
+	public long getAcceptableTimeSkewSeconds() { return acceptableTimeSkewSeconds; }
+	public void setAcceptableTimeSkewSeconds(long acceptableTimeSkewSeconds) { this.acceptableTimeSkewSeconds = acceptableTimeSkewSeconds; }
+	public List<String> getClientIds() { return clientIds; }
+	public void setClientIds(List<String> clientIds) { this.clientIds = clientIds; }
+
 }

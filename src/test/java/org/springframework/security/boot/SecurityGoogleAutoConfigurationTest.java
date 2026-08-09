@@ -18,8 +18,16 @@ package org.springframework.security.boot;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.boot.biz.userdetails.JwtPayloadRepository;
+import org.springframework.security.boot.biz.userdetails.UserDetailsServiceAdapter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 /**
  * Unit tests for {{ @link SecurityGoogleAutoConfiguration }}.
@@ -43,11 +51,56 @@ class SecurityGoogleAutoConfigurationTest {
     }
 
     @Test
+    @DisplayName("transport() creates NetHttpTransport without proxy")
+    void testTransportWithoutProxy() throws Exception {
+        SecurityGoogleAutoConfiguration config = new SecurityGoogleAutoConfiguration();
+        SecurityGoogleProperties props = new SecurityGoogleProperties();
+        var transport = config.transport(props);
+        assertThat(transport).isNotNull();
+    }
+
+    @Test
+    @DisplayName("transport() creates NetHttpTransport with proxy")
+    void testTransportWithProxy() throws Exception {
+        SecurityGoogleAutoConfiguration config = new SecurityGoogleAutoConfiguration();
+        SecurityGoogleProperties props = new SecurityGoogleProperties();
+        props.setProxyHost("proxy.example.com");
+        props.setProxyPort(8080);
+        var transport = config.transport(props);
+        assertThat(transport).isNotNull();
+    }
+
+    @Test
+    @DisplayName("jsonFactory() creates GsonFactory")
+    void testJsonFactory() {
+        SecurityGoogleAutoConfiguration config = new SecurityGoogleAutoConfiguration();
+        assertThat(config.jsonFactory()).isNotNull();
+    }
+
+    @Test
     @DisplayName("Auto-configuration loads when 'spring.security.google.enabled=true'")
     void testLoadsWhenEnabledPropertySet() {
-        runner.withUserConfiguration(SecurityGoogleAutoConfiguration.class)
+        runner.withUserConfiguration(TestConfig.class, SecurityGoogleAutoConfiguration.class)
                 .withPropertyValues("spring.security.google.enabled=true")
                 .run(context -> assertThat(context).hasSingleBean(SecurityGoogleAutoConfiguration.class));
+    }
+
+    @Configuration
+    static class TestConfig {
+        @Bean
+        public JwtPayloadRepository jwtPayloadRepository() {
+            return mock(JwtPayloadRepository.class);
+        }
+
+        @Bean
+        public UserDetailsServiceAdapter userDetailsServiceAdapter() {
+            return new UserDetailsServiceAdapter() {
+                @Override
+                public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+                    return mock(UserDetails.class);
+                }
+            };
+        }
     }
 
     @Test

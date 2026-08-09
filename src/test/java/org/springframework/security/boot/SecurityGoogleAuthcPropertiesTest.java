@@ -86,19 +86,20 @@ class SecurityGoogleAuthcPropertiesTest {
     }
 
     @Test
-    @DisplayName("Field 'clientIds' can be set and read")
+    @DisplayName("Field 'clientIds' can be set and read via getter/setter")
     void testClientIdsField() {
         SecurityGoogleAuthcProperties props = new SecurityGoogleAuthcProperties();
-        // Use reflection to set private field (covers all fields including those without setters)
-        try {
-            java.lang.reflect.Field f = SecurityGoogleAuthcProperties.class.getDeclaredField("clientIds");
-            f.setAccessible(true);
-            f.set(props, null);
-            Object value = f.get(props);
-            assertThat(value).isNotNull();
-        } catch (Exception e) {
-            // Field may have a more complex type; skip silently
-        }
+        assertThat(props.getClientIds()).isNull();
+        props.setClientIds(java.util.Arrays.asList("id1", "id2"));
+        assertThat(props.getClientIds()).hasSize(2);
+    }
+
+    @Test
+    @DisplayName("Field 'acceptableTimeSkewSeconds' can be set and read via getter/setter")
+    void testAcceptableTimeSkewSecondsViaAccessor() {
+        SecurityGoogleAuthcProperties props = new SecurityGoogleAuthcProperties();
+        props.setAcceptableTimeSkewSeconds(42L);
+        assertThat(props.getAcceptableTimeSkewSeconds()).isEqualTo(42L);
     }
 
     @Test

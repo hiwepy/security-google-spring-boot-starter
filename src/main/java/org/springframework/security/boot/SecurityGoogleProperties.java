@@ -34,4 +34,13 @@ public class SecurityGoogleProperties {
 	/** Proxy port for Google API requests. */
 	private int proxyPort;
 
+	public boolean isEnabled() { return enabled; }
+	public void setEnabled(boolean enabled) { this.enabled = enabled; }
+	public String getPublicCertsEncodedUrl() { return publicCertsEncodedUrl; }
+	public void setPublicCertsEncodedUrl(String publicCertsEncodedUrl) { this.publicCertsEncodedUrl = publicCertsEncodedUrl; }
+	public String getProxyHost() { return proxyHost; }
+	public void setProxyHost(String proxyHost) { this.proxyHost = proxyHost; }
+	public int getProxyPort() { return proxyPort; }
+	public void setProxyPort(int proxyPort) { this.proxyPort = proxyPort; }
+
 }

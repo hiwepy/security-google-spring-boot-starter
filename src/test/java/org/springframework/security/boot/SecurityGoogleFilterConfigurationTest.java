@@ -1,38 +1,158 @@
-/*
- * Copyright (c) 2018, hiwepy (https://github.com/hiwepy).
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package org.springframework.security.boot;
+
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.boot.biz.property.SecuritySessionMgtProperties;
+import org.springframework.security.boot.google.authentication.GoogleAuthenticationProcessingFilter;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.DefaultSecurityFilterChain;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.client.util.Clock;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.RETURNS_SELF;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-/**
- * Unit tests for {{ @link SecurityGoogleFilterConfiguration }}.
- *
- * @author [@Loong Wan](https://github.com/loong10k)
- * @since 1.0.0
- */
 @DisplayName("SecurityGoogleFilterConfiguration Tests")
 class SecurityGoogleFilterConfigurationTest {
 
     @Test
-    @DisplayName("Instance can be created via constructor")
+    @DisplayName("Filter configuration class can be instantiated")
     void testInstantiation() {
         SecurityGoogleFilterConfiguration instance = new SecurityGoogleFilterConfiguration();
         assertThat(instance).isNotNull();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    @DisplayName("Inner GoogleWebSecurityCustomizerAdapter can be instantiated")
+    void testInnerClassInstantiation() {
+        SecurityBizProperties bizProperties = new SecurityBizProperties();
+        SecurityGoogleAuthcProperties authc = new SecurityGoogleAuthcProperties();
+        SecuritySessionMgtProperties sessionMgt = new SecuritySessionMgtProperties();
+
+        ObjectProvider emptyProvider = mock(ObjectProvider.class);
+        when(emptyProvider.getIfAvailable()).thenReturn(null);
+
+        ObjectProvider listProvider = mock(ObjectProvider.class);
+        when(listProvider.stream()).thenAnswer(inv -> Stream.empty());
+
+        ObjectProvider clockProvider = mock(ObjectProvider.class);
+        when(clockProvider.getIfAvailable(org.mockito.ArgumentMatchers.any())).thenReturn(Clock.SYSTEM);
+
+        ObjectProvider objectMapperProvider = mock(ObjectProvider.class);
+        when(objectMapperProvider.getIfAvailable()).thenReturn(new ObjectMapper());
+
+        ObjectProvider pkmProvider = mock(ObjectProvider.class);
+        when(pkmProvider.getIfAvailable()).thenReturn(null);
+
+        var adapter = new SecurityGoogleFilterConfiguration.GoogleWebSecurityCustomizerAdapter(
+                bizProperties, authc, sessionMgt,
+                pkmProvider,
+                clockProvider,
+                listProvider,
+                emptyProvider,
+                listProvider,
+                listProvider,
+                listProvider,
+                listProvider,
+                listProvider,
+                objectMapperProvider,
+                emptyProvider,
+                emptyProvider
+        );
+        assertThat(adapter).isNotNull();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    @DisplayName("authenticationProcessingFilter() creates configured filter")
+    void testAuthenticationProcessingFilter() throws Exception {
+        SecurityBizProperties bizProperties = new SecurityBizProperties();
+        SecurityGoogleAuthcProperties authc = new SecurityGoogleAuthcProperties();
+        SecuritySessionMgtProperties sessionMgt = new SecuritySessionMgtProperties();
+
+        ObjectProvider emptyProvider = mock(ObjectProvider.class);
+        when(emptyProvider.getIfAvailable()).thenReturn(null);
+
+        // Provide a non-empty auth provider stream so authenticationManagerBean() can build a manager
+        AuthenticationProvider authProvider = mock(AuthenticationProvider.class);
+        when(authProvider.supports(org.mockito.ArgumentMatchers.any())).thenReturn(true);
+        ObjectProvider authProviderProv = mock(ObjectProvider.class);
+        when(authProviderProv.stream()).thenAnswer(inv -> Stream.of(authProvider));
+
+        ObjectProvider listProvider = mock(ObjectProvider.class);
+        when(listProvider.stream()).thenAnswer(inv -> Stream.empty());
+
+        ObjectProvider clockProvider = mock(ObjectProvider.class);
+        when(clockProvider.getIfAvailable(org.mockito.ArgumentMatchers.any())).thenReturn(Clock.SYSTEM);
+
+        ObjectProvider objectMapperProvider = mock(ObjectProvider.class);
+        when(objectMapperProvider.getIfAvailable()).thenReturn(new ObjectMapper());
+
+        ObjectProvider pkmProvider = mock(ObjectProvider.class);
+        when(pkmProvider.getIfAvailable()).thenReturn(null);
+
+        var adapter = new SecurityGoogleFilterConfiguration.GoogleWebSecurityCustomizerAdapter(
+                bizProperties, authc, sessionMgt,
+                pkmProvider, clockProvider,
+                listProvider, emptyProvider,
+                authProviderProv, listProvider, listProvider, listProvider, listProvider,
+                objectMapperProvider, emptyProvider, emptyProvider
+        );
+
+        GoogleAuthenticationProcessingFilter filter = adapter.authenticationProcessingFilter();
+        assertThat(filter).isNotNull();
+        assertThat(filter.getAuthorizationParamName()).isEqualTo("accessToken");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    @DisplayName("googleSecurityFilterChain configures HttpSecurity")
+    void testGoogleSecurityFilterChain() throws Exception {
+        SecurityBizProperties bizProperties = new SecurityBizProperties();
+        SecurityGoogleAuthcProperties authc = new SecurityGoogleAuthcProperties();
+        SecuritySessionMgtProperties sessionMgt = new SecuritySessionMgtProperties();
+
+        ObjectProvider emptyProvider = mock(ObjectProvider.class);
+        when(emptyProvider.getIfAvailable()).thenReturn(null);
+
+        AuthenticationProvider authProvider = mock(AuthenticationProvider.class);
+        when(authProvider.supports(any())).thenReturn(true);
+        ObjectProvider authProviderProv = mock(ObjectProvider.class);
+        when(authProviderProv.stream()).thenAnswer(inv -> Stream.of(authProvider));
+
+        ObjectProvider listProvider = mock(ObjectProvider.class);
+        when(listProvider.stream()).thenAnswer(inv -> Stream.empty());
+
+        ObjectProvider clockProvider = mock(ObjectProvider.class);
+        when(clockProvider.getIfAvailable(any())).thenReturn(Clock.SYSTEM);
+
+        ObjectProvider objectMapperProvider = mock(ObjectProvider.class);
+        when(objectMapperProvider.getIfAvailable()).thenReturn(new ObjectMapper());
+
+        ObjectProvider pkmProvider = mock(ObjectProvider.class);
+        when(pkmProvider.getIfAvailable()).thenReturn(null);
+
+        var adapter = new SecurityGoogleFilterConfiguration.GoogleWebSecurityCustomizerAdapter(
+                bizProperties, authc, sessionMgt,
+                pkmProvider, clockProvider,
+                listProvider, emptyProvider,
+                authProviderProv, listProvider, listProvider, listProvider, listProvider,
+                objectMapperProvider, emptyProvider, emptyProvider
+        );
+
+        HttpSecurity http = mock(HttpSecurity.class, RETURNS_SELF);
+        when(http.build()).thenReturn(mock(DefaultSecurityFilterChain.class));
+
+        var chain = adapter.googleSecurityFilterChain(http);
+        assertThat(chain).isNotNull();
     }
 }
