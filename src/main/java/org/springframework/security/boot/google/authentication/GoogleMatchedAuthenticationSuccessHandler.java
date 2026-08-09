@@ -22,8 +22,12 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Google 认证 (authentication)成功回调器：讲认证信息写回前端
+ * Authentication success handler for Google authentication.
+ * <p>Writes the authenticated user profile payload as a JSON response to the client
+ * upon successful Google ID token authentication.</p>
+ *
  * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 public class GoogleMatchedAuthenticationSuccessHandler implements MatchedAuthenticationSuccessHandler {
 
@@ -31,15 +35,33 @@ public class GoogleMatchedAuthenticationSuccessHandler implements MatchedAuthent
 	private JwtPayloadRepository payloadRepository;
 	private boolean checkExpiry = false;
 
+	/**
+	 * Constructs a new success handler with the given JWT payload repository.
+	 *
+	 * @param payloadRepository the repository for generating JWT payload from authentication
+	 */
 	public GoogleMatchedAuthenticationSuccessHandler(JwtPayloadRepository payloadRepository) {
 		this.setPayloadRepository(payloadRepository);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>Supports {@link GoogleAuthenticationToken} instances.</p>
+	 */
 	@Override
 	public boolean supports(Authentication authentication) {
 		return SubjectUtils.isAssignableFrom(authentication.getClass(), GoogleAuthenticationToken.class);
 	}
 
+	/**
+	 * Handles successful authentication by writing the user profile payload as JSON.
+	 *
+	 * @param request the HTTP servlet request
+	 * @param response the HTTP servlet response
+	 * @param authentication the authenticated token
+	 * @throws IOException if an I/O error occurs
+	 * @throws ServletException if a servlet error occurs
+	 */
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
@@ -61,18 +83,38 @@ public class GoogleMatchedAuthenticationSuccessHandler implements MatchedAuthent
 		JSON.writeTo(response.getOutputStream(), AuthResponse.success(message, profilePayload));
     }
 
+	/**
+	 * Returns the JWT payload repository.
+	 *
+	 * @return the payload repository
+	 */
 	public JwtPayloadRepository getPayloadRepository() {
 		return payloadRepository;
 	}
 
+	/**
+	 * Sets the JWT payload repository.
+	 *
+	 * @param payloadRepository the payload repository
+	 */
 	public void setPayloadRepository(JwtPayloadRepository payloadRepository) {
 		this.payloadRepository = payloadRepository;
 	}
 
+	/**
+	 * Returns whether JWT token expiry is checked when building the profile payload.
+	 *
+	 * @return {@code true} if expiry is checked, {@code false} otherwise
+	 */
 	public boolean isCheckExpiry() {
 		return checkExpiry;
 	}
 
+	/**
+	 * Sets whether JWT token expiry should be checked when building the profile payload.
+	 *
+	 * @param checkExpiry {@code true} to check expiry, {@code false} otherwise
+	 */
 	public void setCheckExpiry(boolean checkExpiry) {
 		this.checkExpiry = checkExpiry;
 	}

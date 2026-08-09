@@ -19,7 +19,12 @@ package org.springframework.security.boot.google.exception;
 import org.springframework.security.core.AuthenticationException;
 
 /**
+ * Exception thrown when a Google access token is not found in the request.
+ * <p>Extends {@link AuthenticationException} to provide Google-specific
+ * error handling for missing tokens.</p>
  *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 @SuppressWarnings("serial")
 public class GoogleAccessTokenNotFoundException extends AuthenticationException {

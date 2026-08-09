@@ -6,6 +6,14 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+/**
+ * Top-level configuration properties for Google authentication.
+ * <p>Binds to the {@code spring.security.google} prefix and controls whether
+ * Google ID token authentication is enabled, along with proxy and public certificate settings.</p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 @ConfigurationProperties(prefix = SecurityGoogleProperties.PREFIX)
 @Getter
 @Setter
@@ -20,8 +28,10 @@ public class SecurityGoogleProperties {
 	/** Public certificates encoded URL. */
 	private String publicCertsEncodedUrl = GoogleOAuthConstants.DEFAULT_PUBLIC_CERTS_ENCODED_URL;
 
+	/** Proxy host for Google API requests. */
 	private String proxyHost;
 
+	/** Proxy port for Google API requests. */
 	private int proxyPort;
-	
+
 }

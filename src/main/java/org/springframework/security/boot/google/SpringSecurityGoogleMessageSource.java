@@ -19,8 +19,12 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
 /**
- * TODO
+ * Message source for Google authentication error messages.
+ * <p>Loads localized messages from the {@code org.springframework.security.boot.google.messages}
+ * resource bundle and provides a static accessor for convenient retrieval.</p>
+ *
  * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 public class SpringSecurityGoogleMessageSource extends ResourceBundleMessageSource {
 	
@@ -34,6 +38,11 @@ public class SpringSecurityGoogleMessageSource extends ResourceBundleMessageSour
 	// ~ Methods
 	// ========================================================================================================
 
+	/**
+	 * Returns a {@link MessageSourceAccessor} backed by a new instance of this message source.
+	 *
+	 * @return a message source accessor for Google authentication messages
+	 */
 	public static MessageSourceAccessor getAccessor() {
 		return new MessageSourceAccessor(new SpringSecurityGoogleMessageSource());
 	}

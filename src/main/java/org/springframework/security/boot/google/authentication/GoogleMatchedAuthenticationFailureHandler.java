@@ -22,7 +22,13 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Google认证请求失败后的处理实现
+ * Authentication failure handler for Google authentication errors.
+ * <p>Handles Google-specific authentication exceptions by writing appropriate
+ * JSON error responses with localized messages. Supports expired, incorrect,
+ * invalid, and not-found access token exceptions.</p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 public class GoogleMatchedAuthenticationFailureHandler implements MatchedAuthenticationFailureHandler {
 

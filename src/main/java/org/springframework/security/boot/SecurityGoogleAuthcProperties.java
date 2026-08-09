@@ -25,6 +25,15 @@ import org.springframework.security.boot.google.authentication.GoogleAuthenticat
 
 import java.util.List;
 
+/**
+ * Configuration properties for Google ID token authentication.
+ * <p>Binds to the {@code spring.security.google.authc} prefix and extends
+ * the common authentication properties with Google-specific settings such as
+ * acceptable time skew and allowed client IDs.</p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 @ConfigurationProperties(SecurityGoogleAuthcProperties.PREFIX)
 @Getter
 @Setter
@@ -42,6 +51,7 @@ public class SecurityGoogleAuthcProperties extends SecurityAuthcProperties {
     /** Seconds of time skew to accept when verifying time. */
 	private long acceptableTimeSkewSeconds = IdTokenVerifier.DEFAULT_TIME_SKEW_SECONDS;
 	
+	/** List of allowed Google OAuth client IDs for ID token audience verification. */
 	private List<String> clientIds;
-	
+
 }

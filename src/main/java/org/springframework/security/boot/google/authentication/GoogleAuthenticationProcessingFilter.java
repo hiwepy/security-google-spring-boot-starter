@@ -41,8 +41,15 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Google 登录授权 (authorization)过滤器
- * https://developers.google.com/identity/sign-in/android/backend-auth?hl=zh-cn
+ * Authentication processing filter for Google ID token login.
+ * <p>Intercepts requests to the Google login endpoint, extracts the ID token
+ * from the request body or query parameters, verifies it using the
+ * {@link GoogleIdTokenVerifier}, and creates a {@link GoogleAuthenticationToken}
+ * for authentication.</p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ * @see <a href="https://developers.google.com/identity/sign-in/android/backend-auth">Google Backend Auth</a>
  */
 public class GoogleAuthenticationProcessingFilter extends AuthenticationProcessingFilter {
 
@@ -59,11 +66,27 @@ public class GoogleAuthenticationProcessingFilter extends AuthenticationProcessi
     /** Seconds of time skew to accept when verifying time. */
 	private long acceptableTimeSkewSeconds = IdTokenVerifier.DEFAULT_TIME_SKEW_SECONDS;
     
+    /**
+     * Constructs a new filter with the given object mapper.
+     *
+     * @param objectMapper the Jackson object mapper for JSON deserialization
+     */
     public GoogleAuthenticationProcessingFilter(ObjectMapper objectMapper) {
 		super(PathPatternRequestMatcher.pathPattern("/login/google"));
     	this.objectMapper = objectMapper;
     }
 
+    /**
+     * Attempts to authenticate the request by extracting the Google ID token,
+     * verifying it against Google's public keys, and returning an authenticated token.
+     *
+     * @param request the HTTP servlet request
+     * @param response the HTTP servlet response
+     * @return the authenticated {@link Authentication} object
+     * @throws AuthenticationException if authentication fails
+     * @throws IOException if an I/O error occurs
+     * @throws ServletException if a servlet error occurs
+     */
     @Override
     public Authentication doAttemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException, ServletException {
@@ -128,52 +151,113 @@ public class GoogleAuthenticationProcessingFilter extends AuthenticationProcessi
 
     }
     
+	/**
+	 * Extracts the access token from the HTTP request parameters.
+	 *
+	 * @param request the HTTP servlet request
+	 * @return the access token, or {@code null} if not present
+	 */
 	protected String obtainAccessToken(HttpServletRequest request) {
-		// 从参数中获取token
 		String token = request.getParameter(getAuthorizationParamName());
 		return token;
 	}
 
+	/**
+	 * Sets the details on the authentication token using the authentication details source.
+	 *
+	 * @param request the HTTP servlet request
+	 * @param authRequest the authentication token to populate
+	 */
 	protected void setDetails(HttpServletRequest request, AbstractAuthenticationToken authRequest) {
 		authRequest.setDetails(authenticationDetailsSource.buildDetails(request));
 	}
-	
+
+	/**
+	 * Returns the name of the request parameter that carries the access token.
+	 *
+	 * @return the authorization parameter name
+	 */
 	public String getAuthorizationParamName() {
 		return authorizationParamName;
 	}
 
+	/**
+	 * Sets the name of the request parameter that carries the access token.
+	 *
+	 * @param authorizationParamName the authorization parameter name
+	 */
 	public void setAuthorizationParamName(String authorizationParamName) {
 		this.authorizationParamName = authorizationParamName;
 	}
 
+	/**
+	 * Returns the Google public keys manager used for ID token verification.
+	 *
+	 * @return the public keys manager
+	 */
 	public GooglePublicKeysManager getPublicKeysManager() {
 		return publicKeysManager;
 	}
 
+	/**
+	 * Sets the Google public keys manager used for ID token verification.
+	 *
+	 * @param publicKeysManager the public keys manager
+	 */
 	public void setPublicKeysManager(GooglePublicKeysManager publicKeysManager) {
 		this.publicKeysManager = publicKeysManager;
 	}
 
+	/**
+	 * Returns the list of allowed Google OAuth client IDs.
+	 *
+	 * @return the list of client IDs
+	 */
 	public List<String> getClientIds() {
 		return clientIds;
 	}
 
+	/**
+	 * Sets the list of allowed Google OAuth client IDs.
+	 *
+	 * @param clientIds the list of client IDs
+	 */
 	public void setClientIds(List<String> clientIds) {
 		this.clientIds = clientIds;
 	}
 
+	/**
+	 * Returns the clock used for ID token time verification.
+	 *
+	 * @return the clock
+	 */
 	public Clock getClock() {
 		return clock;
 	}
 
+	/**
+	 * Sets the clock used for ID token time verification.
+	 *
+	 * @param clock the clock
+	 */
 	public void setClock(Clock clock) {
 		this.clock = clock;
 	}
 
+	/**
+	 * Returns the acceptable time skew in seconds for ID token verification.
+	 *
+	 * @return the acceptable time skew in seconds
+	 */
 	public long getAcceptableTimeSkewSeconds() {
 		return acceptableTimeSkewSeconds;
 	}
 
+	/**
+	 * Sets the acceptable time skew in seconds for ID token verification.
+	 *
+	 * @param acceptableTimeSkewSeconds the acceptable time skew in seconds
+	 */
 	public void setAcceptableTimeSkewSeconds(long acceptableTimeSkewSeconds) {
 		this.acceptableTimeSkewSeconds = acceptableTimeSkewSeconds;
 	}

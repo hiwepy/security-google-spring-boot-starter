@@ -18,8 +18,12 @@ package org.springframework.security.boot.google.exception;
 import org.springframework.security.boot.biz.exception.AuthenticationTokenInvalidException;
 
 /**
- * Google AccessToken Invalid Exception
+ * Exception thrown when a Google access token is invalid.
+ * <p>Extends {@link AuthenticationTokenInvalidException} to provide
+ * Google-specific error handling for invalid tokens.</p>
+ *
  * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
 @SuppressWarnings("serial")
 public class GoogleAccessTokenInvalidException extends AuthenticationTokenInvalidException {

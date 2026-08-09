@@ -38,8 +38,18 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Filter configuration for Google ID token authentication.
+ * <p>Registers a {@link SecurityFilterChain} that includes the
+ * {@link GoogleAuthenticationProcessingFilter} for intercepting
+ * Google login requests. Activated only when
+ * {@code spring.security.google.enabled=true} and the application is a web application.</p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 @Configuration
-@AutoConfigureBefore(name = { 
+@AutoConfigureBefore(name = {
 	"org.springframework.boot.security.autoconfigure.web.servlet.ServletWebSecurityAutoConfiguration"
 })
 @ConditionalOnWebApplication
@@ -47,6 +57,10 @@ import java.util.stream.Collectors;
 @EnableConfigurationProperties({ SecurityGoogleProperties.class, SecurityGoogleAuthcProperties.class, SecurityBizProperties.class })
 public class SecurityGoogleFilterConfiguration {
 	
+	/**
+	 * Web security customizer that configures the Google ID token authentication filter
+	 * and registers a {@link SecurityFilterChain} for Google login paths.
+	 */
 	@Configuration
 	@EnableConfigurationProperties({ SecurityGoogleProperties.class, SecurityGoogleAuthcProperties.class, SecurityBizProperties.class })
 	static class GoogleWebSecurityCustomizerAdapter extends WebSecurityCustomizerAdapter {
@@ -104,13 +118,16 @@ public class SecurityGoogleFilterConfiguration {
    			this.sessionAuthenticationStrategy = sessionAuthenticationStrategyProvider.getIfAvailable();
 		}
 		
+		/**
+		 * Creates and configures the {@link GoogleAuthenticationProcessingFilter}.
+		 *
+		 * @return the configured authentication processing filter
+		 * @throws Exception if filter initialization fails
+		 */
 		public GoogleAuthenticationProcessingFilter authenticationProcessingFilter() throws Exception {
-	    	
+
 			GoogleAuthenticationProcessingFilter authenticationFilter = new GoogleAuthenticationProcessingFilter(this.objectMapper);
-			
-			/**
-			 * 批量设置参数
-			 */
+
 			PropertyMapper map = PropertyMapper.get();
 			
 			map.from(getSessionMgtProperties().isAllowSessionCreation()).to(authenticationFilter::setAllowSessionCreation);
@@ -132,6 +149,13 @@ public class SecurityGoogleFilterConfiguration {
 	        return authenticationFilter;
 	    }
 
+		/**
+		 * Builds the {@link SecurityFilterChain} for Google authentication with highest precedence + 4.
+		 *
+		 * @param http the {@link HttpSecurity} to configure
+		 * @return the configured security filter chain
+		 * @throws Exception if configuration fails
+		 */
 		@Bean
 		@Order(Ordered.HIGHEST_PRECEDENCE + 4)
 		public SecurityFilterChain googleSecurityFilterChain(HttpSecurity http) throws Exception {
