@@ -26,7 +26,7 @@ import java.nio.charset.StandardCharsets;
  * <p>Writes the authenticated user profile payload as a JSON response to the client
  * upon successful Google ID token authentication.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public class GoogleMatchedAuthenticationSuccessHandler implements MatchedAuthenticationSuccessHandler {

@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
  * Google login requests. Activated only when
  * {@code spring.security.google.enabled=true} and the application is a web application.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 @Configuration

@@ -11,7 +11,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * <p>Binds to the {@code spring.security.google} prefix and controls whether
  * Google ID token authentication is enabled, along with proxy and public certificate settings.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 @ConfigurationProperties(prefix = SecurityGoogleProperties.PREFIX)

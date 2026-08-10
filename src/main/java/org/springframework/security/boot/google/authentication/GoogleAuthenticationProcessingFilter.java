@@ -47,7 +47,7 @@ import java.util.Objects;
  * {@link GoogleIdTokenVerifier}, and creates a {@link GoogleAuthenticationToken}
  * for authentication.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  * @see <a href="https://developers.google.com/identity/sign-in/android/backend-auth">Google Backend Auth</a>
  */

@@ -20,7 +20,7 @@ import org.springframework.util.Assert;
  * user details via the configured {@link UserDetailsServiceAdapter}, performing
  * user status checks, and returning an authenticated token with granted authorities.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public class GoogleAuthenticationProvider implements AuthenticationProvider {

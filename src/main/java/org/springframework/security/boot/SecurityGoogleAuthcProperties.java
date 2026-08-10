@@ -31,7 +31,7 @@ import java.util.List;
  * the common authentication properties with Google-specific settings such as
  * acceptable time skew and allowed client IDs.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 @ConfigurationProperties(SecurityGoogleAuthcProperties.PREFIX)

@@ -27,7 +27,7 @@ import java.nio.charset.StandardCharsets;
  * JSON error responses with localized messages. Supports expired, incorrect,
  * invalid, and not-found access token exceptions.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public class GoogleMatchedAuthenticationFailureHandler implements MatchedAuthenticationFailureHandler {

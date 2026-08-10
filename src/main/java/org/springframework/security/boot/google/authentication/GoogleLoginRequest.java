@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * <p>Deserialized from the JSON request body when the client submits a Google
  * access token for authentication.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public class GoogleLoginRequest {

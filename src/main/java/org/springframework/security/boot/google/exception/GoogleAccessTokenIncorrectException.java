@@ -22,7 +22,7 @@ import org.springframework.security.boot.biz.exception.AuthenticationTokenIncorr
  * <p>Extends {@link AuthenticationTokenIncorrectException} to provide
  * Google-specific error handling for incorrect tokens.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 @SuppressWarnings("serial")

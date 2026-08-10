@@ -29,7 +29,7 @@ import java.security.GeneralSecurityException;
  * failure handler, success handler, and authentication provider required for Google
  * ID token authentication. Activated only when {@code spring.security.google.enabled=true}.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 @Configuration
