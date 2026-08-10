@@ -19,7 +19,7 @@ import org.springframework.security.boot.biz.exception.AuthenticationTokenInvali
 
 /**
  * Google AccessToken Invalid Exception
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  */
 @SuppressWarnings("serial")
 public class GoogleAccessTokenInvalidException extends AuthenticationTokenInvalidException {
