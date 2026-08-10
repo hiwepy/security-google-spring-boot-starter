@@ -19,7 +19,7 @@ import org.springframework.security.boot.biz.exception.AuthenticationTokenIncorr
 
 /**
  * Google AccessToken Incorrect Exception
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  */
 @SuppressWarnings("serial")
 public class GoogleAccessTokenIncorrectException extends AuthenticationTokenIncorrectException {
