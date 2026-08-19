@@ -20,6 +20,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ToString
 public class SecurityGoogleProperties {
 
+	/**
+	 * Returns the enabled.
+	 *
+	 * @return the enabled
+	 */
 	public static final String PREFIX = "spring.security.google";
 
 	/** Whether Enable Google AccessToken Authentication. */
@@ -34,13 +39,53 @@ public class SecurityGoogleProperties {
 	/** Proxy port for Google API requests. */
 	private int proxyPort;
 
+	/**
+	 * Returns the enabled.
+	 *
+	 * @return the enabled
+	 */
 	public boolean isEnabled() { return enabled; }
+	/**
+	 * Sets the enabled.
+	 *
+	 * @param enabled the enabled
+	 */
 	public void setEnabled(boolean enabled) { this.enabled = enabled; }
+	/**
+	 * Returns the public certs encoded url.
+	 *
+	 * @return the public certs encoded url
+	 */
 	public String getPublicCertsEncodedUrl() { return publicCertsEncodedUrl; }
+	/**
+	 * Sets the public certs encoded url.
+	 *
+	 * @param publicCertsEncodedUrl the public certs encoded url
+	 */
 	public void setPublicCertsEncodedUrl(String publicCertsEncodedUrl) { this.publicCertsEncodedUrl = publicCertsEncodedUrl; }
+	/**
+	 * Returns the proxy host.
+	 *
+	 * @return the proxy host
+	 */
 	public String getProxyHost() { return proxyHost; }
+	/**
+	 * Sets the proxy host.
+	 *
+	 * @param proxyHost the proxy host
+	 */
 	public void setProxyHost(String proxyHost) { this.proxyHost = proxyHost; }
+	/**
+	 * Returns the proxy port.
+	 *
+	 * @return the proxy port
+	 */
 	public int getProxyPort() { return proxyPort; }
+	/**
+	 * Sets the proxy port.
+	 *
+	 * @param proxyPort the proxy port
+	 */
 	public void setProxyPort(int proxyPort) { this.proxyPort = proxyPort; }
 
 }

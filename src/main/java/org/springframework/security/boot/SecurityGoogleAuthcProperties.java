@@ -40,6 +40,11 @@ import java.util.List;
 @ToString
 public class SecurityGoogleAuthcProperties extends SecurityAuthcProperties {
 
+	/**
+	 * Returns the authorization param name.
+	 *
+	 * @return the authorization param name
+	 */
 	public static final String PREFIX = "spring.security.google.authc";
 
 	/** Authorization Path Pattern */
@@ -54,11 +59,41 @@ public class SecurityGoogleAuthcProperties extends SecurityAuthcProperties {
 	/** List of allowed Google OAuth client IDs for ID token audience verification. */
 	private List<String> clientIds;
 
+	/**
+	 * Returns the authorization param name.
+	 *
+	 * @return the authorization param name
+	 */
 	public String getAuthorizationParamName() { return authorizationParamName; }
+	/**
+	 * Sets the authorization param name.
+	 *
+	 * @param authorizationParamName the authorization param name
+	 */
 	public void setAuthorizationParamName(String authorizationParamName) { this.authorizationParamName = authorizationParamName; }
+	/**
+	 * Returns the acceptable time skew seconds.
+	 *
+	 * @return the acceptable time skew seconds
+	 */
 	public long getAcceptableTimeSkewSeconds() { return acceptableTimeSkewSeconds; }
+	/**
+	 * Sets the acceptable time skew seconds.
+	 *
+	 * @param acceptableTimeSkewSeconds the acceptable time skew seconds
+	 */
 	public void setAcceptableTimeSkewSeconds(long acceptableTimeSkewSeconds) { this.acceptableTimeSkewSeconds = acceptableTimeSkewSeconds; }
+	/**
+	 * Returns the client ids.
+	 *
+	 * @return the client ids
+	 */
 	public List<String> getClientIds() { return clientIds; }
+	/**
+	 * Sets the client ids.
+	 *
+	 * @param clientIds the client ids
+	 */
 	public void setClientIds(List<String> clientIds) { this.clientIds = clientIds; }
 
 }

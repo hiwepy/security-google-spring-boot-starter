@@ -31,6 +31,10 @@ public class SpringSecurityGoogleMessageSource extends ResourceBundleMessageSour
 	// ~ Constructors
 	// ===================================================================================================
 
+	/**
+	 * Constructs a new spring security google message source instance.
+	 *
+	 */
 	public SpringSecurityGoogleMessageSource() {
 		setBasename("org.springframework.security.boot.google.messages");
 	}

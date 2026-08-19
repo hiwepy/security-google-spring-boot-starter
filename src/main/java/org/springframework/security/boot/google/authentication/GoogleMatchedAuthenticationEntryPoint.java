@@ -49,6 +49,12 @@ public class GoogleMatchedAuthenticationEntryPoint implements MatchedAuthenticat
 
 	protected MessageSourceAccessor messages = SpringSecurityGoogleMessageSource.getAccessor();
 
+	/**
+	 * Determines whether supports.
+	 *
+	 * @param e the e
+	 * @return the result
+	 */
 	@Override
 	public boolean supports(AuthenticationException e) {
 		return SubjectUtils.isAssignableFrom(e.getClass(), GoogleAccessTokenExpiredException.class,
@@ -56,6 +62,13 @@ public class GoogleMatchedAuthenticationEntryPoint implements MatchedAuthenticat
 				GoogleAccessTokenNotFoundException.class );
 	}
 
+	/**
+	 * commence.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param e the e
+	 */
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e)
 			throws IOException, ServletException {

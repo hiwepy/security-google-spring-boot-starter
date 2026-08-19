@@ -52,6 +52,12 @@ import java.util.stream.Collectors;
 @AutoConfigureBefore(name = {
 	"org.springframework.boot.security.autoconfigure.web.servlet.ServletWebSecurityAutoConfiguration"
 })
+/**
+ * <p>Configuration properties.</p>
+ *
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 @ConditionalOnWebApplication
 @ConditionalOnProperty(prefix = SecurityGoogleProperties.PREFIX, value = "enabled", havingValue = "true")
 @EnableConfigurationProperties({ SecurityGoogleProperties.class, SecurityGoogleAuthcProperties.class, SecurityBizProperties.class })
@@ -177,6 +183,11 @@ public class SecurityGoogleFilterConfiguration {
 			return http.build();
 		}
 
+		/**
+		 * customize.
+		 *
+		 * @param web the web
+		 */
 		@Override
 		public void customize(WebSecurity web) {
 			super.customize(web);
